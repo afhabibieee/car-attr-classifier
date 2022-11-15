@@ -11,6 +11,7 @@ from io_utils import parse_args
 
 import mlflow
 
+mlflow.set_tracking_uri('https://dagshub.com/afhabibieee/car-attr-classifier.mlflow')
 
 if __name__=='__main__':
 
@@ -86,7 +87,7 @@ if __name__=='__main__':
                 at_epoch = epoch
                 best_validation_accuracy = test_acc
                 #best_state = model.state_dict()
-                mlflow.pytorch.log_model(model, '../model')
+                #mlflow.pytorch.log_model(model, '../models')
                 print("Yeay! we found a new best model :')\n")
             
             mlflow.log_metrics(
