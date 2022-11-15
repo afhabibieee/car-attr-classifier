@@ -1,0 +1,5 @@
+outs:
+- md5: c75b1234da61600b8820e8f3c0a8ccf9.dir
+  size: 411245045
+  nfiles: 3266
+  path: 48_cars
