@@ -85,8 +85,8 @@ if __name__=='__main__':
             if test_acc > best_validation_accuracy:
                 at_epoch = epoch
                 best_validation_accuracy = test_acc
-                best_state = model.state_dict()
-                mlflow.pytorch.log_model(best_state, '../model')
+                #best_state = model.state_dict()
+                mlflow.pytorch.log_model(model, '../model')
                 print("Yeay! we found a new best model :')\n")
             
             mlflow.log_metrics(

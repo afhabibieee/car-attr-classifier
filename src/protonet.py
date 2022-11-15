@@ -12,7 +12,7 @@ class PrototypicalNetworks(torch.nn.Module):
         elif backbone_name=='resnet':
             self.backbone = backbones.resnet(variant=variant_depth)
         elif backbone_name=='convnet':
-            self.backbone = backbones.ConvNet(depth=variant_depth)
+            self.backbone = backbones.ConvNet(depth=int(variant_depth))
         else:
             ValueError('{} as the selected backbone was not found'.format(backbone_name))
 
