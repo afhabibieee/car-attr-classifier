@@ -2,6 +2,15 @@ import torch
 from tqdm import tqdm
 from configs import DEVICE
 
+import mlflow
+
+def get_experiment_id(name):
+    exp = mlflow.get_experiment_by_name(name)
+    if exp is None:
+        exp_id = mlflow.create_experiment(name)
+        return exp_id
+    return exp.experiment_id
+
 def compute_prototypes(support_features, support_labels):
     n_way = len(torch.unique(support_labels))
     return torch.cat(
