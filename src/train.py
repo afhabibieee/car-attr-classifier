@@ -104,7 +104,7 @@ if __name__=='__main__':
             )
 
     local_path = mlflow.artifacts.download_artifacts(
-        get_last_run_id('car attribute'),
-        'saved model',
-        os.path.join('../models', get_last_run_id('car attribute'))
+        run_id=get_last_run_id('car attribute'),
+        artifact_path='saved model',
+        dst_path=os.path.join('../models', get_last_run_id('car attribute'))
     )
