@@ -79,7 +79,7 @@ if __name__=='__main__':
             )
 
             print(
-                    'Epoch: {}/{}\n'.format(epoch+1, epochs),
+                    'Epoch: {}/{}\n'.format(epoch, epochs),
                     'loss: {:.3f} - '.format(train_loss),
                     'val_loss: {:.3f} - '.format(val_loss),
                     'accuracy: {:.3f} - '.format(train_acc),
