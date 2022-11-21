@@ -1,4 +1,6 @@
-import torch
+from configs import DAGSHUB_USER_NAME, DAGSHUB_REPO_NAME
+
+import os, torch
 from torch import optim
 #from torch.optim.lr_scheduler import MultiStepLR
 
@@ -7,19 +9,21 @@ from fewshotdataloader import generate_loader
 from protonet import PrototypicalNetworks
 
 from utils import train_per_epoch
+from utils import get_experiment_id, get_last_run_id
+
 from io_utils import parse_args
 
 import mlflow
 
-mlflow.set_tracking_uri('https://dagshub.com/afhabibieee/car-attr-classifier.mlflow')
+mlflow.set_tracking_uri(f'https://dagshub.com/{DAGSHUB_USER_NAME}/{DAGSHUB_REPO_NAME}.mlflow')
+mlflow.set_experiment('car attribute')
 
 if __name__=='__main__':
 
     params = parse_args()
 
     mlflow.end_run()
-    with mlflow.start_run() as run:
-
+    with mlflow.start_run(experiment_id=get_experiment_id('car attribute')):
 
         train_loader = generate_loader(
             'train', 
@@ -86,8 +90,7 @@ if __name__=='__main__':
             if val_acc > best_validation_accuracy:
                 at_epoch = epoch
                 best_validation_accuracy = val_acc
-                #best_state = model.state_dict()
-                #mlflow.pytorch.log_model(model, '../models')
+                mlflow.pytorch.log_model(model, "model")
                 print("Yeay! we found a new best model :')\n")
             
             mlflow.log_metrics(
@@ -99,3 +102,9 @@ if __name__=='__main__':
                 },
                 step=epoch
             )
+
+    local_path = mlflow.artifacts.download_artifacts(
+        get_last_run_id('car attribute'),
+        'model',
+        os.path.join('../models', get_last_run_id('car attribute'))
+    )

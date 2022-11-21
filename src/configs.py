@@ -19,3 +19,6 @@ LEARNING_RATE = 1e-4
 WEIGHT_DECAY = 1e-5
 
 DEVICE = device('cuda' if cuda.is_available() else 'cpu')
+
+DAGSHUB_USER_NAME = 'afhabibieee'
+DAGSHUB_REPO_NAME = 'car-attr-classifier'

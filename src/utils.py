@@ -11,6 +11,15 @@ def get_experiment_id(name):
         return exp_id
     return exp.experiment_id
 
+def get_last_run_id(name):
+    exp = get_experiment_id(name)
+    client = mlflow.MlflowClient()
+    runs = client.search_runs(experiment_ids=exp)
+    if len(runs) == 0:
+        return None
+    last_run = runs[0]
+    return last_run.info.run_id
+
 def compute_prototypes(support_features, support_labels):
     n_way = len(torch.unique(support_labels))
     return torch.cat(
