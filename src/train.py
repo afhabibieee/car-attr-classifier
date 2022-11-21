@@ -90,7 +90,7 @@ if __name__=='__main__':
             if val_acc > best_validation_accuracy:
                 at_epoch = epoch
                 best_validation_accuracy = val_acc
-                mlflow.pytorch.log_model(model, "model")
+                mlflow.pytorch.log_model(model, "saved model")
                 print("Yeay! we found a new best model :')\n")
             
             mlflow.log_metrics(
@@ -105,6 +105,6 @@ if __name__=='__main__':
 
     local_path = mlflow.artifacts.download_artifacts(
         get_last_run_id('car attribute'),
-        'model',
+        'saved model',
         os.path.join('../models', get_last_run_id('car attribute'))
     )
