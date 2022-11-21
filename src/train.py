@@ -30,8 +30,8 @@ if __name__=='__main__':
             n_task=params.n_train_task,
             n_workers=params.n_worker
         )
-        test_loader = generate_loader(
-            'test',
+        val_loader = generate_loader(
+            'val',
             image_size=params.img_size,
             n_way=params.n_way,
             n_shot=params.n_shot,
@@ -70,22 +70,22 @@ if __name__=='__main__':
         at_epoch = 1
 
         for epoch in range(1, epochs+1):
-            train_loss, test_loss, train_acc, test_acc = train_per_epoch(
-                model, train_loader, test_loader, criterion, optimizer
+            train_loss, val_loss, train_acc, val_acc = train_per_epoch(
+                model, train_loader, val_loader, criterion, optimizer
             )
 
             print(
                     'Epoch: {}/{}\n'.format(epoch+1, epochs),
                     'loss: {:.3f} - '.format(train_loss),
-                    'val_loss: {:.3f} - '.format(test_loss),
+                    'val_loss: {:.3f} - '.format(val_loss),
                     'accuracy: {:.3f} - '.format(train_acc),
-                    'val_accuracy: {:.3f}'.format(test_acc)
+                    'val_accuracy: {:.3f}'.format(val_acc)
                 )
             print('\n')
 
-            if test_acc > best_validation_accuracy:
+            if val_acc > best_validation_accuracy:
                 at_epoch = epoch
-                best_validation_accuracy = test_acc
+                best_validation_accuracy = val_acc
                 #best_state = model.state_dict()
                 #mlflow.pytorch.log_model(model, '../models')
                 print("Yeay! we found a new best model :')\n")
@@ -93,9 +93,9 @@ if __name__=='__main__':
             mlflow.log_metrics(
                 {
                     'train_loss':   train_loss,
-                    'test_loss':    test_loss,
+                    'val_loss':     val_loss,
                     'train_acc':    train_acc,
-                    'test_acc':     test_acc
+                    'val_acc':      val_acc
                 },
                 step=epoch
             )

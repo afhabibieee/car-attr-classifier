@@ -1,6 +1,6 @@
 from torch import device, cuda
 
-CAR_SPECS_DIR = '../data/48_cars'
+CAR_SPECS_DIR = '../data/Cars'
 
 IMAGE_SIZE = 224
 
