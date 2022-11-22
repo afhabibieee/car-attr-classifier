@@ -102,9 +102,3 @@ if __name__=='__main__':
                 },
                 step=epoch
             )
-
-    local_path = mlflow.artifacts.download_artifacts(
-        run_id=get_last_run_id('car attribute'),
-        artifact_path='model',
-        dst_path=os.path.join('../models/saved model', get_last_run_id('car attribute'))
-    )

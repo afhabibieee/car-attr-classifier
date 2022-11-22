@@ -22,3 +22,5 @@ DEVICE = device('cuda' if cuda.is_available() else 'cpu')
 
 DAGSHUB_USER_NAME = 'afhabibieee'
 DAGSHUB_REPO_NAME = 'car-attr-classifier'
+
+MODEL_DIR = '../models/saved model'
