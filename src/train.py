@@ -44,7 +44,11 @@ if __name__=='__main__':
             n_workers=params.n_worker
         )
 
-        model = PrototypicalNetworks(params.backbone_name, params.variant_depth)
+        model = PrototypicalNetworks(
+            params.backbone_name, 
+            params.variant_depth,
+            params.dropout
+        )
 
         epochs = params.epochs
         learning_rate = params.lr
