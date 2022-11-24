@@ -66,7 +66,8 @@ if __name__=='__main__':
                 'learning_rate':    learning_rate,
                 'weight_decay':     weight_decay,
                 'backbone':         params.backbone_name,
-                'varian_depth':     params.variant_depth
+                'varian_depth':     params.variant_depth,
+                'dropout':          params.dropout
             }
         )
 
