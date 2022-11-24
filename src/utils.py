@@ -100,6 +100,7 @@ def evaluate(model, data_loader):
     total_pred = 0
     correct_pred = 0
 
+    model.to(DEVICE)
     model.eval()
     with torch.no_grad():
         for support_images, support_labels, query_images, query_labels, _ in data_loader:
