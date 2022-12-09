@@ -2,7 +2,7 @@ from torch import device, cuda
 
 CAR_SPECS_DIR = '../data/Cars'
 
-IMAGE_SIZE = 224
+IMAGE_SIZE = 84
 
 IMAGENET_MEAN, IMAGENET_STD = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 

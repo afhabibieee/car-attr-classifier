@@ -1,12 +1,13 @@
-from configs import DAGSHUB_USER_NAME, DAGSHUB_REPO_NAME
+from configs import DAGSHUB_USER_NAME, DAGSHUB_REPO_NAME, DEVICE
 
-import os, torch
+import torch
 from torch import optim
 #from torch.optim.lr_scheduler import MultiStepLR
 
 from fewshotdataloader import generate_loader
 
 from protonet import PrototypicalNetworks
+from bdcspn import BDCosineSimilarityProtonet
 
 from utils import train_per_epoch
 from utils import get_experiment_id, get_last_run_id
@@ -43,12 +44,19 @@ if __name__=='__main__':
             n_task=params.n_val_task,
             n_workers=params.n_worker
         )
-
-        model = PrototypicalNetworks(
-            params.backbone_name, 
-            params.variant_depth,
-            params.dropout
-        )
+        
+        print('\nThe data loader was generated successfully.\n')
+                
+        if params.model_name == 'protonets':
+            model = PrototypicalNetworks(
+                params.backbone_name, params.variant_depth, params.dropout
+            ).to(DEVICE)
+        elif params.model_name == 'bdcspn':
+            model = BDCosineSimilarityProtonet(
+                params.backbone_name, params.variant_depth, params.dropout, use_softmax=True
+            ).to(DEVICE)
+        else:
+            ValueError('{} as the selected model was not found'.format(params.model_name))
 
         epochs = params.epochs
         learning_rate = params.lr
@@ -65,6 +73,7 @@ if __name__=='__main__':
                 'epochs':           epochs,
                 'learning_rate':    learning_rate,
                 'weight_decay':     weight_decay,
+                'model':            params.model_name,
                 'backbone':         params.backbone_name,
                 'varian_depth':     params.variant_depth,
                 'dropout':          params.dropout
@@ -74,9 +83,10 @@ if __name__=='__main__':
         criterion = torch.nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
-        best_state = model.state_dict()
         best_validation_accuracy = 0.0
         at_epoch = 1
+
+        print('\nTraining the model begins...')
 
         for epoch in range(1, epochs+1):
             train_loss, val_loss, train_acc, val_acc = train_per_epoch(

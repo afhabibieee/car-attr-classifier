@@ -1,29 +1,10 @@
 import torch
-import backbones
-
-from utils import compute_prototypes
+from utils import get_backbone, compute_prototypes
 
 class PrototypicalNetworks(torch.nn.Module):
     def __init__(self, backbone_name, variant_depth, dropout):
         super(PrototypicalNetworks, self).__init__()
-        
-        if backbone_name=='effinet':
-            self.backbone = backbones.effinet(
-                variant=variant_depth,
-                dropout=float(dropout)
-            )
-        elif backbone_name=='resnet':
-            self.backbone = backbones.resnet(
-                variant=variant_depth,
-                dropout=float(dropout)
-            )
-        elif backbone_name=='convnet':
-            self.backbone = backbones.ConvNet(
-                depth=int(variant_depth),
-                dropout=float(dropout)
-            )
-        else:
-            ValueError('{} as the selected backbone was not found'.format(backbone_name))
+        self.backbone = get_backbone(backbone_name, variant_depth, dropout)
 
     def forward(self,
                 support_images,
