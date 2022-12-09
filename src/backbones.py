@@ -39,7 +39,6 @@ def resnet(variant, dropout):
         net = resnet18(weights='DEFAULT')
     elif variant=='34':
         net = resnet34(weights='DEFAULT')
-        pass
     else:
         raise ValueError(
             'the version of the resnet you\'re looking for is not found!'
