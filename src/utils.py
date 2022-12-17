@@ -8,6 +8,7 @@ import mlflow
 import pandas as pd
 import numpy as np
 from sklearn.metrics import precision_score, recall_score
+from torchmetrics.classification import MulticlassRecall, MulticlassPrecision
 
 def get_experiment_id(name):
     exp = mlflow.get_experiment_by_name(name)
@@ -103,8 +104,7 @@ def softmax_if_specified(output):
     output in order to return soft probabilities.
     """
     return output.softmax(-1)
-
-
+    
 def train_per_epoch(model, train_loader, test_loader, criterion, optimizer):
     train_losses, test_losses = [], []
     train_correct, test_correct = 0, 0
@@ -156,7 +156,7 @@ def train_per_epoch(model, train_loader, test_loader, criterion, optimizer):
         train_acc, 
         test_acc
     )
-
+    
 def evaluate_per_task(
     model,
     support_images,
@@ -170,10 +170,17 @@ def evaluate_per_task(
     correct = (torch.max(classification_scores.detach().data, 1)[1] == query_labels).sum().item()
     total = len(query_labels)
     return classification_scores, correct, total 
-
+    
 def evaluate(model, data_loader, datasets):
     total_pred = 0
     correct_pred = 0
+    total_recall = 0
+    total_precision = 0
+
+    num_classes = data_loader.batch_sampler.n_way
+    recall = MulticlassRecall(num_classes=num_classes)
+    precision = MulticlassPrecision(num_classes=num_classes)
+
     results = []
     results.append(
         'Ground truth,Predicted,1st prob,2nd prob,Top distance score'
@@ -198,6 +205,9 @@ def evaluate(model, data_loader, datasets):
             top_score, pred_labels = torch.max(
                 classification_scores.data, 1
             )
+
+            total_recall += recall(pred_labels, query_labels).item()
+            total_precision += precision(pred_labels, query_labels).item()
             
             first_prob, second_prob = zip(*torch.topk(classification_scores.softmax(-1).data, 2, 1)[0])
             first_prob = torch.stack(first_prob, dim=0)
@@ -213,10 +223,11 @@ def evaluate(model, data_loader, datasets):
                 )
                 results.append(result)
 
-    avg_accuracy = correct_pred/total_pred
+    avg_accuracy = correct_pred / total_pred
+    avg_recall = total_recall / len(data_loader)
+    avg_precision = total_precision / len(data_loader)
     avg_time = times / len(data_loader)
-    return avg_accuracy, results, avg_time
-
+    return avg_accuracy, avg_recall, avg_precision, results, avg_time
 
 def precision_recall_curve(path, thresholds):
     results = pd.read_csv(path)
