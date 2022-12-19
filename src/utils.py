@@ -178,8 +178,8 @@ def evaluate(model, data_loader, datasets):
     total_precision = 0
 
     num_classes = data_loader.batch_sampler.n_way
-    recall = MulticlassRecall(num_classes=num_classes)
-    precision = MulticlassPrecision(num_classes=num_classes)
+    recall = MulticlassRecall(num_classes=num_classes, average='micro')
+    precision = MulticlassPrecision(num_classes=num_classes, average='micro')
 
     results = []
     results.append(
