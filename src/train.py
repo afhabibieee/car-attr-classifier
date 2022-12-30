@@ -69,6 +69,7 @@ if __name__=='__main__':
                 'n_shot':           params.n_shot,
                 'n_query':          params.n_query,
                 'n_train_task':     params.n_train_task,
+                'n_val_task':       params.n_val_task,
                 'n_worker':         params.n_worker,
                 'epochs':           epochs,
                 'learning_rate':    learning_rate,

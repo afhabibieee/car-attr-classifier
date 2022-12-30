@@ -5,12 +5,17 @@ import warnings
 import torch
 
 from pathlib import Path
-from  PIL import Image
+#from  PIL import Image
+import cv2
 
 from configs import IMAGENET_MEAN, IMAGENET_STD
 
-from torchvision import transforms as T
+#from torchvision import transforms as T
+from cvtorchvision import cvtransforms as T
 from torch.utils.data import Dataset, Sampler
+
+import collections
+collections.Iterable = collections.abc.Iterable
 
 class ImageDataset(Dataset):
     def __init__(
@@ -95,7 +100,8 @@ class ImageDataset(Dataset):
         )
     
     def __getitem__(self, item):
-        image = self.transform(Image.open(self.images[item]).convert('RGB'))
+        #image = self.transform(Image.open(self.images[item]).convert('RGB'))
+        image = self.transform(cv2.imread(self.images[item])[:,:, ::-1])
         label = self.labels[item]
 
         return image, label
